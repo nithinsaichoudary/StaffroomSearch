@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User: Search Faculty Room</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/user.css">
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">
+            <img src="img/GitamLogo.png" width="110" height="50" alt="Logo">
+        </a>
+        <div class="ml-auto">
+            <a href="/logout" class="btn btn-outline-danger">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="custom-container-search">
+            <h2>Search Faculty Room</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="query">Faculty Name or ID:</label>
+                    <input type="text" id="query" class="form-control" required placeholder="Faculty Name/Id">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+            <div id="profile" class="mt-4">
+                <img id="profileLogo" src="" alt="Profile Logo" width="100" height="100" class="mb-3">
+                <p><strong>Faculty Name:</strong> <span id="facultyName"></span></p>
+                <p><strong>Faculty ID:</strong> <span id="facultyID"></span></p>
+                <p><strong>Block Name:</strong> <span id="blockName"></span></p>
+                <p><strong>Room Number:</strong> <span id="roomNumber"></span></p>
+                <p><strong>Phone Number:</strong> <span id="phoneNumber"></span></p>
+                <p><strong>Email Address:</strong> <span id="emailAddress"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search Functionality
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+
+            fetch(`/search?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.name) {
+                        // Show profile details only if data is found
+                        document.getElementById('profile').classList.add('show');
+                        document.getElementById('facultyName').innerText = data.name;
+                        document.getElementById('facultyID').innerText = data.facultyID;
+                        document.getElementById('blockName').innerText = data.block;
+                        document.getElementById('roomNumber').innerText = data.roomNumber;
+                        document.getElementById('phoneNumber').innerText = data.phoneNumber;
+                        document.getElementById('emailAddress').innerText = data.email;
+                        document.getElementById('profileLogo').src = data.profileLogo || 'img/defaultLogo.png';
+                    } else {
+                        // Hide the profile section if no data is found
+                        document.getElementById('profile').classList.remove('show');
+                        document.getElementById('profile').innerHTML = `<p>No results found</p>`;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('profile').classList.remove('show');
+                    document.getElementById('profile').innerHTML = `<p>Error retrieving data. Please try again later.</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
