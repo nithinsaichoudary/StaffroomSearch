@@ -85,8 +85,6 @@ This project provides an application to search for university faculty details, i
 
 ```bash
 staff-room-redeem/
-├── controllers/
-│   └── redeemController.js   # Logic for handling search and scraping
 ├── models/
 │   └── faculty.js            # Mongoose model for Faculty data
 ├── public/
